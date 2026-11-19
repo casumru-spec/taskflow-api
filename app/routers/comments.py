@@ -40,9 +40,7 @@ def create_comment(payload: CommentCreate, db: Session = Depends(get_db)):
 
 
 @router.patch("/{comment_id}", response_model=CommentRead)
-def update_comment(
-    comment_id: int, payload: CommentUpdate, db: Session = Depends(get_db)
-):
+def update_comment(comment_id: int, payload: CommentUpdate, db: Session = Depends(get_db)):
     comment = db.get(Comment, comment_id)
     if not comment:
         raise HTTPException(status_code=404, detail="Comment not found")

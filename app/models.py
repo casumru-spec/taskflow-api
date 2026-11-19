@@ -17,16 +17,12 @@ from app.database import Base
 
 class User(Base):
     __tablename__ = "users"
-    __table_args__ = (
-        CheckConstraint("role IN ('operator', 'admin')", name="ck_users_role"),
-    )
+    __table_args__ = (CheckConstraint("role IN ('operator', 'admin')", name="ck_users_role"),)
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
     display_name: Mapped[str] = mapped_column(String(255), nullable=False)
-    role: Mapped[str] = mapped_column(
-        String(32), nullable=False, server_default="operator"
-    )
+    role: Mapped[str] = mapped_column(String(32), nullable=False, server_default="operator")
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
@@ -55,9 +51,7 @@ class Label(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
-    color: Mapped[str] = mapped_column(
-        String(7), nullable=False, server_default="#6b7280"
-    )
+    color: Mapped[str] = mapped_column(String(7), nullable=False, server_default="#6b7280")
 
     tasks: Mapped[list["Task"]] = relationship(back_populates="label")
 
@@ -65,12 +59,8 @@ class Label(Base):
 class Task(Base):
     __tablename__ = "tasks"
     __table_args__ = (
-        CheckConstraint(
-            "status IN ('open', 'in_progress', 'done')", name="ck_tasks_status"
-        ),
-        CheckConstraint(
-            "priority IN ('low', 'medium', 'high')", name="ck_tasks_priority"
-        ),
+        CheckConstraint("status IN ('open', 'in_progress', 'done')", name="ck_tasks_status"),
+        CheckConstraint("priority IN ('low', 'medium', 'high')", name="ck_tasks_priority"),
     )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -85,12 +75,8 @@ class Task(Base):
     )
     title: Mapped[str] = mapped_column(String(200), nullable=False)
     description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    status: Mapped[str] = mapped_column(
-        String(32), nullable=False, server_default="open"
-    )
-    priority: Mapped[str] = mapped_column(
-        String(16), nullable=False, server_default="medium"
-    )
+    status: Mapped[str] = mapped_column(String(32), nullable=False, server_default="open")
+    priority: Mapped[str] = mapped_column(String(16), nullable=False, server_default="medium")
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
@@ -111,9 +97,7 @@ class Task(Base):
 
 class Comment(Base):
     __tablename__ = "comments"
-    __table_args__ = (
-        CheckConstraint("length(trim(body)) > 0", name="ck_comments_body_not_empty"),
-    )
+    __table_args__ = (CheckConstraint("length(trim(body)) > 0", name="ck_comments_body_not_empty"),)
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     task_id: Mapped[int] = mapped_column(

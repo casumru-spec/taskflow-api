@@ -1,15 +1,16 @@
 """initial schema
 
 Revision ID: 0001_initial_schema
-Revises: 
+Revises:
 Create Date: 2026-11-19 21:30:00.000000
 
 """
+
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
 
+from alembic import op
 
 revision: str = "0001_initial_schema"
 down_revision: Union[str, None] = None
@@ -24,7 +25,12 @@ def upgrade() -> None:
         sa.Column("email", sa.String(length=255), nullable=False),
         sa.Column("display_name", sa.String(length=255), nullable=False),
         sa.Column("role", sa.String(length=32), server_default="operator", nullable=False),
-        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column(
+            "created_at",
+            sa.DateTime(timezone=True),
+            server_default=sa.text("now()"),
+            nullable=False,
+        ),
         sa.CheckConstraint("role IN ('operator', 'admin')", name="ck_users_role"),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("email"),
@@ -35,7 +41,12 @@ def upgrade() -> None:
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("name", sa.String(length=200), nullable=False),
         sa.Column("description", sa.Text(), nullable=True),
-        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column(
+            "created_at",
+            sa.DateTime(timezone=True),
+            server_default=sa.text("now()"),
+            nullable=False,
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
 
@@ -58,8 +69,18 @@ def upgrade() -> None:
         sa.Column("description", sa.Text(), nullable=True),
         sa.Column("status", sa.String(length=32), server_default="open", nullable=False),
         sa.Column("priority", sa.String(length=16), server_default="medium", nullable=False),
-        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
-        sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column(
+            "created_at",
+            sa.DateTime(timezone=True),
+            server_default=sa.text("now()"),
+            nullable=False,
+        ),
+        sa.Column(
+            "updated_at",
+            sa.DateTime(timezone=True),
+            server_default=sa.text("now()"),
+            nullable=False,
+        ),
         sa.CheckConstraint("status IN ('open', 'in_progress', 'done')", name="ck_tasks_status"),
         sa.CheckConstraint("priority IN ('low', 'medium', 'high')", name="ck_tasks_priority"),
         sa.ForeignKeyConstraint(["assignee_id"], ["users.id"], ondelete="SET NULL"),
@@ -74,7 +95,12 @@ def upgrade() -> None:
         sa.Column("task_id", sa.Integer(), nullable=False),
         sa.Column("author_id", sa.Integer(), nullable=False),
         sa.Column("body", sa.Text(), nullable=False),
-        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column(
+            "created_at",
+            sa.DateTime(timezone=True),
+            server_default=sa.text("now()"),
+            nullable=False,
+        ),
         sa.CheckConstraint("length(trim(body)) > 0", name="ck_comments_body_not_empty"),
         sa.ForeignKeyConstraint(["author_id"], ["users.id"], ondelete="RESTRICT"),
         sa.ForeignKeyConstraint(["task_id"], ["tasks.id"], ondelete="CASCADE"),
